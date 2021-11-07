@@ -16,7 +16,6 @@ export function logIn(user_name, password) {
 }
 
 export function signUp(requestBody) {
-    console.log(requestBody, 'rrrrrrrrrrrrrrr')
     return fetch(`${apiHost}/api/users`, {
         method: "POST",
         headers: headers(),
