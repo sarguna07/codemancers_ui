@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { BrowserRouter } from "react-router-dom";
 import CustomRoutes from "../src/routes/CustomRoutes";
-import "../src/App.css"
 import "antd/dist/antd.css";
 
 class App extends Component {

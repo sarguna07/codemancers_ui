@@ -51,7 +51,7 @@ class App extends React.Component {
                                     return <Redirect to={`/quizz/solution`} />;
                                 }
                                 if (name) {
-                                    return <Solution {...props} name={"Sarguna"} />;
+                                    return <Solution {...props} name={name} />;
                                 } else {
                                     return <PageNotFound {...props} />;
                                 }
