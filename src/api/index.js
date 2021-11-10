@@ -1,4 +1,4 @@
-import { apiHost } from "config";
+import { apiHost } from "../config";
 import {
     headers
 } from "../helpers";
