@@ -1,50 +1,124 @@
 import React, { Component } from 'react'
-import { fetchQuiz } from "../api/solution";
-
+import { fetchQuiz, SumbitQuiz } from "../api/solution";
+import Result from "../views/Result"
 class Solution extends Component {
     constructor(props) {
         super(props);
+        this.answers = {
+            id: "",
+            answer: "",
+        };
         this.state = {
-            data: []
+            question_list: false,
+            question_data: [],
+            correct_options: [{ ...this.answers }],
         };
     }
+
+    handleChange = (event, index, value) => {
+        let ans = this.state.correct_options;
+        ans[index]['id'] = event.target.id
+        ans[index]['answer'] = value
+        this.setState({ correct_options: ans });
+    };
 
     componentDidMount() {
         fetchQuiz(this.props.name)
             .then(({ data }) => {
                 this.setState({
-                    data: data
+                    question_data: data,
+                    question_list: true
                 })
             })
     }
 
+    submitAnswer = () => {
+        const {
+            correct_options
+        } = this.state;
+        SumbitQuiz({ quiz: correct_options })
+            .then((data) => {
+                this.setState({
+                    result: data.data,
+                    question_list: false
+                })
+            })
+            .catch((error) => {
+                alert(error)
+            });
+
+    }
     render() {
-        const { data } = this.state;
+        const { question_data, result, question_list } = this.state;
+        const { handleChange, submitAnswer } = this;
+
         return (
-            <div style={{
-                display: "flex",
-                flexDirection: "column",
-                width: "70vw",
-                margin: "auto",
-                justifyContent: "center",
-            }}>
-                {
-                    data.map((q, i) => {
-                        return (
-                            <div key={i}>
-                                <p style={{ textAlign: "center" }}><b>{i + 1} . {q.question}</b></p>
-                                <div style={{
-                                    display: "flex",
-                                    justifyContent: "space-evenly"
-                                }}>
-                                    <p>{q.option_one}</p>
-                                    <p>{q.option_two}</p>
-                                    <p>{q.option_three}</p>
-                                    <p>{q.option_four}</p>
-                                </div>
-                            </div>
-                        )
-                    })
+            <div>
+                {question_list ?
+                    <form
+                        onSubmit={(e) => {
+                            e.preventDefault();
+                            submitAnswer();
+                        }}
+                    >
+
+                        <div style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            width: "70vw",
+                            margin: "auto",
+                            justifyContent: "center",
+                        }}>
+                            {
+                                question_data.map((q, i) => {
+                                    return (
+                                        <div key={i}>
+                                            <p style={{ textAlign: "center" }}><b>{i + 1}.{q.question}</b></p>
+                                            <div style={{
+                                                display: "flex",
+                                                justifyContent: "space-evenly"
+                                            }}>
+                                                <div style={{ display: "flex", alignItems: "center" }}>
+                                                    <input
+                                                        type="checkbox"
+                                                        id={q.id}
+                                                        onChange={(e) => handleChange(e, i, q.option_one)} />
+                                                    <span style={{ paddingLeft: "10px" }}>{q.option_one}</span>
+                                                </div>
+                                                <div style={{ display: "flex", alignItems: "center" }}>
+                                                    <input type="checkbox"
+                                                        id={q.id}
+                                                        onChange={(e) => handleChange(e, i, q.option_two)} />
+                                                    <span style={{ paddingLeft: "10px" }}>{q.option_two}</span>
+                                                </div>
+                                                <div style={{ display: "flex", alignItems: "center" }}>
+                                                    <input type="checkbox"
+                                                        id={q.id}
+                                                        onChange={(e) => handleChange(e, i, q.option_three)} />
+                                                    <span style={{ paddingLeft: "10px" }}>{q.option_three}</span>
+                                                </div>
+                                                <div style={{ display: "flex", alignItems: "center" }}>
+                                                    <input type="checkbox"
+                                                        id={q.id}
+                                                        onChange={(e) => handleChange(e, i, q.option_four)} />
+                                                    <span style={{ paddingLeft: "10px" }}>{q.option_four}</span>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    )
+                                })
+                            }
+
+                            <button>
+                                submit
+                            </button>
+
+                        </div >
+                    </form>
+                    :
+
+                    <Result result={result} />
                 }
             </div>
         )
