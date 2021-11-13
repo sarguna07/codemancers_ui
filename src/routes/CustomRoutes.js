@@ -10,9 +10,11 @@ import {
     SignUp,
     LogIn,
     Solution,
-    PageNotFound
+    PageNotFound,
+    Quiz
 } from "../views"
 
+import { isAuthenticated } from "../helpers";
 class App extends React.Component {
     constructor(props) {
         super(props);
@@ -44,11 +46,11 @@ class App extends React.Component {
                         />
 
                         <Route
-                            path="/quizz/solution"
+                            path="/quiz/solution"
                             render={(props) => {
                                 if (redirect) {
                                     this.setState({ redirect: false });
-                                    return <Redirect to={`/quizz/solution`} />;
+                                    return <Redirect to={`/quiz/solution`} />;
                                 }
                                 if (name) {
                                     return <Solution {...props} name={name} />;
@@ -58,7 +60,13 @@ class App extends React.Component {
                             }}
                             exact
                         />
-
+                        {isAuthenticated() && <Route
+                            path="/quiz"
+                            render={(props) => {
+                                return <Quiz {...props} />;
+                            }}
+                            exact
+                        />}
                         <Route to="*">
                             <Redirect to="/signup" />
                         </Route>

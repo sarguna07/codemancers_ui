@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { PageNotFound } from '.';
 import { fetchQuiz, SumbitQuiz } from "../api/solution";
 import Result from "../views/Result"
 class Solution extends Component {
@@ -9,7 +10,7 @@ class Solution extends Component {
             answer: "",
         };
         this.state = {
-            question_list: false,
+            question_list: true,
             question_data: [],
             correct_options: [{ ...this.answers }],
         };
@@ -54,8 +55,9 @@ class Solution extends Component {
 
         return (
             <div>
-                {question_list ?
-                    <form
+                {question_data.length === 0 && <PageNotFound />}
+                {question_data.length !== 0 && question_list &&
+                    (<form
                         onSubmit={(e) => {
                             e.preventDefault();
                             submitAnswer();
@@ -110,16 +112,24 @@ class Solution extends Component {
                                 })
                             }
 
-                            <button>
+                            <button
+                                style={{
+                                    width: "20%",
+                                    textAlign: "center",
+                                    alignSelf: "center",
+                                    marginTop: "30px",
+                                    color: "white",
+                                    background: "#2860cc",
+                                    padding: "8px 0px",
+                                    border: "none"
+                                }}>
                                 submit
                             </button>
 
                         </div >
                     </form>
-                    :
-
-                    <Result result={result} />
-                }
+                    )}
+                {question_data.length !== 0 && !question_list && <Result result={result} />}
             </div>
         )
     }
