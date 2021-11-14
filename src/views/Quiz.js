@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import { Button, Card, Modal, Input, Form, Radio, Space } from 'antd';
 import { createQuiz } from "../api/quiz";
-
+import { LogOut } from "../api/login"
+import { kickUser } from "../helpers"
 const { TextArea } = Input;
 
 const layout = {
@@ -58,7 +59,10 @@ class Quiz extends Component {
                 url: `https://ui-codemancers.web.app/quiz/solution?name=${group_name}`
             })
         }).catch(error => {
-            console.log('error', error[1]);
+            if (error[1]['message'] == 'Access Denied') {
+                LogOut();
+                kickUser();
+            }
             alert(error[1]['data'] ? error[1]['data'] : error[1]['message'])
         })
     }
@@ -82,14 +86,38 @@ class Quiz extends Component {
         }
     }
 
+    Logout = () => {
+        LogOut()
+    }
+
     render() {
         const { modelVisible, quiz, final_quiz, group_name, shareable_url, url } = this.state;
-        const { handleOk, handleCancel, onChange, handleSubmit } = this;
-        console.log(group_name, 'group_name')
+        const { handleOk, handleCancel, onChange, handleSubmit, Logout } = this;
         return (
             <React.Fragment>
-                <header className="header" style={{ backgroundColor: "#0000A5" }}>
-                    <h2 style={{ color: "white" }}>WELCOME TO QUIZ CREATION</h2>
+                <header className="header" >
+                    <div style={{ width: "85%", paddingLeft: "7%" }}>
+                        <h2 style={{ color: "white", textAlign: "center" }}>WELCOME TO QUIZ CREATION</h2>
+                    </div>
+                    <div style={{
+                        display: "flex",
+                        width: "15%",
+                        alignSelf: "center",
+                        justifyContent: "flex-end"
+                    }}>
+                        <a style={{
+                            background: "white",
+                            padding: "5px 10px",
+                            marginRight: "20px",
+                            color: "#1f3fa5",
+                            borderRadius: "2px"
+                        }}
+
+                            onClick={LogOut}>
+
+                            Logout
+                        </a>
+                    </div>
                 </header>
                 <div className="my-root">
                     <div className="root-container">
@@ -261,7 +289,7 @@ class Quiz extends Component {
                         />
                     </Form.Item>}
                 </div>
-            </React.Fragment>
+            </React.Fragment >
         )
     }
 } export default Quiz;

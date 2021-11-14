@@ -1,5 +1,5 @@
 import { apiHost } from "../config";
-import { headers } from "../helpers";
+import { headers, kickUser } from "../helpers";
 
 export function logIn(user_name, password) {
     return fetch(`${apiHost}/login`, {
@@ -29,14 +29,14 @@ export function signUp(requestBody) {
     });
 }
 
-export function LogOut(requestBody) {
+export function LogOut() {
     return fetch(`${apiHost}/logout`, {
         method: "POST",
         headers: headers(),
-        body: JSON.stringify(requestBody)
     }).then(async response => {
         if (response.ok) {
-            alert("Registered Successfully.!!!");
+            alert("Logout Successfully.!!!");
+            kickUser()
             return response.json();
         }
         throw [response.status, await response.json()];

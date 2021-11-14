@@ -28,7 +28,7 @@ function deleteAllCookie() {
 async function kickUser() {
     await deleteAllCookie();
     await window.localStorage.clear();
-    window.location.href = "/signup";
+    window.location.href = "/";
 }
 
 function isAuthenticated() {

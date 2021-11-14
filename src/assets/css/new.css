@@ -26,10 +26,9 @@ div.root-container {
 }
 
 .header {
-  background-color: #da3b44;
+  background-color: #0000a5;
   width: 100%;
   display: flex;
-  justify-content: center;
   padding: 10px 0px;
 }
 
