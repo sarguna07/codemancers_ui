@@ -113,7 +113,7 @@ class Quiz extends Component {
                             borderRadius: "2px"
                         }}
 
-                            onClick={LogOut}>
+                            onClick={Logout}>
 
                             Logout
                         </a>
